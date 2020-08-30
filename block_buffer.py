@@ -7,16 +7,17 @@ class BlockBuffer:
     Applies a given process to signal blocks of a given length, with a given hop size. To feed the stream, the class
     accepts a function get_input that takes a buffer length as its argument, and returns an input buffer of than length.
 
-    The loop_through() method steps through the stream, making frames of size "in_dur_s" (in seconds), hopping by
-    "hop_size_s" (in seconds), and feeding this frame to "process," a function input as an argument, for processing.
+    The loop_through() method accepts an input stream in chunks of length "in_dur_s" (seconds), and builds up frames of
+    length "out_dur_s" (seconds), and hopping by "hop_size_s" (in seconds). Each frame is fed to "process," a function
+    that is input as an argument, for processing.
 
     Args:
         SR (int)            :   Sample rate.
         in_dur_s (flt)      :   Desired input size, in seconds.
         hop_size_s (flt)    :   Analysis hop size, in seconds.
         out_dur_s (flt)     :   Frame size, in seconds.
-        get_input (fcn)     :   A function that takes a sample size as its only argument, and returns an audio signal.
-        process (fcn)       :   A function to be applied per frame.
+        get_input (fcn)     :   A function that takes a sample size (int), and returns a signal of that length.
+        process (fcn)       :   A function that accepts a single frame and returns nothing.
 
     Example use:
 
@@ -43,8 +44,9 @@ class BlockBuffer:
         self.in_length = int(in_dur_s * self.SR)
         self.hop_size = int(hop_size_s * self.SR)
         self.buffer_size = int(out_dur_s * self.SR)
-        self.num_hops = int(self.buffer_size // self.hop_size)
-        self.num_bufs = self.num_hops
+        self.num_out_hops = int(self.buffer_size // self.hop_size)
+        self.num_in_hops = int(self.in_length // self.hop_size)
+        self.num_bufs = self.num_out_hops
         self.sound_in = np.zeros(self.in_length)
         self.buffers = np.zeros((self.buffer_size, self.num_bufs))
         self.buf_ptrs = np.arange(self.num_bufs) * self.hop_size
@@ -57,7 +59,7 @@ class BlockBuffer:
             if not self.sound_in.any():
                 return
 
-            for h in range(self.num_hops):
+            for h in range(self.num_in_hops):
                 self.update_buffers()
                 self.process(self.get_analysis_buf())
                 self.update_pointers()
