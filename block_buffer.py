@@ -5,19 +5,19 @@ class BlockBuffer:
     """Blocked buffer reading and processing of an input stream.
 
     Applies a given process to signal blocks of a given length, with a given hop size. To feed the stream, the class
-    accepts a function get_input that takes a buffer length as its argument, and returns an input buffer of than length.
+    accepts a function get_input that takes a buffer length as its argument, and returns a signal of that length.
 
     The loop_through() method accepts an input stream in chunks of length "in_dur_s" (seconds), and builds up frames of
-    length "out_dur_s" (seconds), and hopping by "hop_size_s" (in seconds). Each frame is fed to "process," a function
-    that is input as an argument, for processing.
+    length "out_dur_s" (seconds), hopping by "hop_size_s" (in seconds). Each frame is fed to "process," a function
+    that is input as an argument.
 
     Args:
         SR (int)            :   Sample rate.
-        in_dur_s (flt)      :   Desired input size, in seconds.
+        in_dur_s (flt)      :   Input size, in seconds.
         hop_size_s (flt)    :   Analysis hop size, in seconds.
         out_dur_s (flt)     :   Frame size, in seconds.
-        get_input (fcn)     :   A function that takes a sample size (int), and returns a signal of that length.
-        process (fcn)       :   A function that accepts a single frame and returns nothing.
+        get_input (fcn)     :   A function that takes a sample size (int), and returns a signal of that length (np array).
+        process (fcn)       :   A function that accepts a single frame of signal (as np array) and returns nothing.
 
     Example use:
 
@@ -25,10 +25,10 @@ class BlockBuffer:
                            in_dur_s=0.2,
                            hop_size_s=0.1,
                            out_dur_s=1.,
-                           get_input=audio_helpers.get_istream,
-                           process=net_helpers.predict_print)
+                           get_input=audio_helpers.get_istream,     # Request for input from, say, laptop microphone. 
+                           process=net_helpers.predict_print)       # Make predictions with a neural net (that requires 1s of audio).
 
-    my_block.loop_through()
+    my_block.loop_through()                                         # Instantiate the loop.
 
 
     """
