@@ -68,7 +68,7 @@ class BufferPlayer:
         r_out = r_in + self.hop_size
 
         for h in range(num_hops):
-            self.buffer[w_in:w_out] = sound_in[r_in:r_out]
+            self.buffer[w_in:w_out] += sound_in[r_in:r_out]
 
             w_in = self.advance_ptr(w_in)
             w_out = w_in + self.hop_size
