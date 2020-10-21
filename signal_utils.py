@@ -19,6 +19,6 @@ def make_signal(f0=440,
       mod_phase = rand_vib_phase * 2*np.pi*np.random.rand()
       modulation = I * h/fm * np.cos(2 * np.pi * fm * t + mod_phase)
       phase = rand_phase * 2 * np.pi * np.random.rand()
-      x += np.cos(2 * np.pi * h*f * t + modulation + phase)
+      x += np.cos(2 * np.pi * h*f0 * t + modulation + phase)
 
   return x
