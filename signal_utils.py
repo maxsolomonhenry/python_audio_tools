@@ -11,14 +11,14 @@ def make_signal(f0=440,
   """
       Simple generator for complex signals with modulation. 
   """
-    
-    t = np.linspace(0, dur, int(dur*fs), endpoint=False)
-    x = np.zeros(t.shape)
+  
+  t = np.linspace(0, dur, int(dur*fs), endpoint=False)
+  x = np.zeros(t.shape)
 
-    for h in range(1, num_harmonics + 1):
-        mod_phase = rand_vib_phase * 2*np.pi*np.random.rand()
-        modulation = I * h/fm * np.cos(2 * np.pi * fm * t + mod_phase)
-        phase = rand_phase * 2 * np.pi * np.random.rand()
-        x += np.cos(2 * np.pi * h*f * t + modulation + phase)
+  for h in range(1, num_harmonics + 1):
+      mod_phase = rand_vib_phase * 2*np.pi*np.random.rand()
+      modulation = I * h/fm * np.cos(2 * np.pi * fm * t + mod_phase)
+      phase = rand_phase * 2 * np.pi * np.random.rand()
+      x += np.cos(2 * np.pi * h*f * t + modulation + phase)
 
-    return x
+  return x
