@@ -8,6 +8,9 @@ def make_signal(f0=440,
                 fs=44100,
                 rand_phase=False, 
                 rand_vib_phase=False):
+  """
+      Simple generator for complex signals with modulation. 
+  """
     
     t = np.linspace(0, dur, int(dur*fs), endpoint=False)
     x = np.zeros(t.shape)
